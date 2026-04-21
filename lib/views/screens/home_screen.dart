@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:malist/config/router/app_router.dart';
 import 'package:malist/core/constants/asssets.dart';
+import 'package:malist/providers/core/core_service_provider.dart';
+import 'package:malist/providers/notes/notes_provider.dart';
+import 'package:malist/providers/passwords/passwords_provider.dart';
 import 'package:malist/providers/todo/state/todo_state.dart';
 import 'package:malist/providers/todo/todo_provider.dart';
 import 'package:malist/views/widgets/no_data_widget.dart';
@@ -86,7 +89,17 @@ class _HomePageState extends ConsumerState<HomeScreen> {
               ];
             },
             onSelected: (value) {
-              // ToDo : Implement each method
+              if (value == 'import' || value == 'export') {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      "Working on it, dont want to deliver some AI slop brody !!",
+                    ),
+                  ),
+                );
+              } else if (value == 'nuke') {
+                _showNukeWarningDialog(context, theme, ref);
+              }
             },
           ),
         ],
@@ -368,6 +381,104 @@ class _HomePageState extends ConsumerState<HomeScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showNukeWarningDialog(
+    BuildContext context,
+    ThemeData theme,
+    WidgetRef ref,
+  ) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: "Nuke Data",
+      transitionDuration: const Duration(milliseconds: 250),
+      pageBuilder: (context, anim1, anim2) {
+        return Dialog(
+          backgroundColor: theme.colorScheme.surface,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(1),
+            side: BorderSide(
+              color: theme.colorScheme.primary.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "SYSTEM PURGE",
+                  style: theme.textTheme.headlineSmall!.copyWith(
+                    letterSpacing: 2,
+                    color: Colors.redAccent,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  "Warning: This action will permanently delete all your data. This cannot be undone.",
+                  style: theme.textTheme.bodyLarge,
+                ),
+                const SizedBox(height: 32),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => context.pop(),
+                      child: const Text(
+                        "CANCEL",
+                        style: TextStyle(letterSpacing: 1),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    ElevatedButton(
+                      onPressed: () async {
+                        context.pop();
+                        await ref.read(coreServiceProvider.notifier).nukeData();
+                        await ref.read(todoProvider.notifier).getTodos();
+                        await ref
+                            .read(notesNotifierProvider.notifier)
+                            .getNotes();
+                        await ref
+                            .read(passwordsNotifierProvider.notifier)
+                            .getPasswords();
+
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('System completely purged.'),
+                            ),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(1),
+                        ),
+                      ),
+                      child: const Text(
+                        "NUKE",
+                        style: TextStyle(
+                          letterSpacing: 1,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return Transform.scale(
+          scale: 0.95 + (0.05 * anim1.value),
+          child: FadeTransition(opacity: anim1, child: child),
+        );
+      },
     );
   }
 }

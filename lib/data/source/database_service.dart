@@ -93,11 +93,15 @@ class DatabaseServiceImpl implements DatabaseService {
     String operator,
     dynamic value,
   ) async {
-    final records = await db.query(table).where(field, operator, value);
-    if (records.isSuccess) {
-      return Right(List<Map<String, dynamic>>.from(records.data));
-    } else {
-      return Left(GeneralFailure(records.message));
+    try {
+      final records = await db.query(table).where(field, operator, value);
+      if (records.isSuccess) {
+        return Right(List<Map<String, dynamic>>.from(records.data));
+      } else {
+        return Left(GeneralFailure(records.message));
+      }
+    } catch (e) {
+      return Left(GeneralFailure(e.toString()));
     }
   }
 
@@ -108,13 +112,17 @@ class DatabaseServiceImpl implements DatabaseService {
     String whereField,
     dynamic whereValue,
   ) async {
-    final result = await db
-        .update(table, data)
-        .where(whereField, '=', whereValue);
-    if (result.isSuccess) {
-      return Right(unit);
-    } else {
-      return Left(GeneralFailure(result.message));
+    try {
+      final result = await db
+          .update(table, data)
+          .where(whereField, '=', whereValue);
+      if (result.isSuccess) {
+        return Right(unit);
+      } else {
+        return Left(GeneralFailure(result.message));
+      }
+    } catch (e) {
+      return Left(GeneralFailure(e.toString()));
     }
   }
 
@@ -124,11 +132,15 @@ class DatabaseServiceImpl implements DatabaseService {
     String whereField,
     dynamic whereValue,
   ) async {
-    final result = await db.delete(table).where(whereField, '=', whereValue);
-    if (result.isSuccess) {
-      return Right(unit);
-    } else {
-      return Left(GeneralFailure(result.message));
+    try {
+      final result = await db.delete(table).where(whereField, '=', whereValue);
+      if (result.isSuccess) {
+        return Right(unit);
+      } else {
+        return Left(GeneralFailure(result.message));
+      }
+    } catch (e) {
+      return Left(GeneralFailure(e.toString()));
     }
   }
 
@@ -136,19 +148,31 @@ class DatabaseServiceImpl implements DatabaseService {
   Future<Either<Failure, List<Map<String, dynamic>>>> getAllRecords(
     String table,
   ) async {
-    final records = await db.query(table);
-    if (records.isSuccess) {
-      return Right(List<Map<String, dynamic>>.from(records.data));
-    } else {
-      return Left(GeneralFailure(records.message));
+    try {
+      final records = await db.query(table);
+      if (records.isSuccess) {
+        return Right(List<Map<String, dynamic>>.from(records.data));
+      } else {
+        return Left(GeneralFailure(records.message));
+      }
+    } catch (e) {
+      return Left(GeneralFailure(e.toString()));
     }
   }
 
   @override
   Future<Either<Failure, Unit>> deleteAll() async {
     try {
-      await db.deleteDatabase();
-      return Right(unit);
+      final tables = ['notes', 'todos', 'passwords'];
+      for (final table in tables) {
+        final records = await db.query(table);
+        if (records.isSuccess) {
+          for (final record in records.data) {
+            await db.delete(table).where('id', '=', record['id']);
+          }
+        }
+      }
+      return const Right(unit);
     } catch (e) {
       return Left(GeneralFailure(e.toString()));
     }

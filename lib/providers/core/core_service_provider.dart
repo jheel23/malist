@@ -54,6 +54,6 @@ class CoreServiceNotifier extends Notifier<CoreServiceState> {
 }
 
 final coreServiceProvider =
-    NotifierProvider.autoDispose<CoreServiceNotifier, CoreServiceState>(() {
+    NotifierProvider<CoreServiceNotifier, CoreServiceState>(() {
       return sl<CoreServiceNotifier>();
     });

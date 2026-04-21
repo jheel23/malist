@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:malist/config/router/app_router.dart';
 import 'package:malist/config/utils/functions.dart';
+import 'package:malist/config/utils/quill_helper.dart';
 import 'package:malist/providers/notes/notes_provider.dart';
 import 'package:malist/providers/notes/state/notes_state.dart';
 import 'package:malist/views/widgets/dialogs/add_note_dialog.dart';
@@ -145,7 +146,11 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
             ],
           ),
           const SizedBox(height: 20),
-          Text(description, maxLines: 3, overflow: TextOverflow.ellipsis),
+          Text(
+            QuillHelper.deltaStringToPlainText(description),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
           const SizedBox(height: 20),
           Row(
             children: [

@@ -1,38 +1,92 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:malist/config/utils/functions.dart';
+import 'package:malist/config/utils/quill_helper.dart';
 import 'package:malist/data/models/notes/notes_model.dart';
+import 'package:malist/providers/notes/notes_provider.dart';
 import 'package:malist/views/widgets/quill_toolbar_widget.dart';
 
-class NoteDetailScreen extends StatefulWidget {
+class NoteDetailScreen extends ConsumerStatefulWidget {
   final NotesModel? note;
   const NoteDetailScreen({super.key, required this.note});
 
   @override
-  State<NoteDetailScreen> createState() => _NoteDetailScreenState();
+  ConsumerState<NoteDetailScreen> createState() => _NoteDetailScreenState();
 }
 
-class _NoteDetailScreenState extends State<NoteDetailScreen> {
+class _NoteDetailScreenState extends ConsumerState<NoteDetailScreen> {
   late quill.QuillController _controller;
   final FocusNode _focusNode = FocusNode();
   final ScrollController _scrollController = ScrollController();
+  Timer? _debounce;
+  late NotesModel _currentNote;
 
   @override
   void initState() {
     super.initState();
 
-    final doc = quill.Document()..insert(0, '''${widget.note?.description}''');
+    _currentNote =
+        widget.note ??
+        NotesModel(
+          id: '',
+          title: 'Untitled',
+          description: '',
+          dateTime: DateTime.now(),
+        );
+
+    final doc = QuillHelper.deltaStringToDocument(_currentNote.description);
 
     _controller = quill.QuillController(
       document: doc,
       selection: const TextSelection.collapsed(offset: 0),
     );
+
+    _controller.document.changes.listen((event) {
+      if (_debounce?.isActive ?? false) _debounce!.cancel();
+      _debounce = Timer(const Duration(milliseconds: 1000), () {
+        _saveNote();
+      });
+    });
+  }
+
+  void _saveNote({bool showSnackbar = false}) {
+    if (widget.note == null) return;
+
+    final currentDeltaString = QuillHelper.documentToDeltaString(
+      _controller.document,
+    );
+
+    if (currentDeltaString != _currentNote.description) {
+      setState(() {
+        _currentNote = _currentNote.copyWith(
+          description: currentDeltaString,
+          dateTime: DateTime.now(),
+        );
+      });
+      ref.read(notesNotifierProvider.notifier).updateNote(_currentNote);
+
+      if (showSnackbar && context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Note Saved')));
+      }
+    } else if (showSnackbar && context.mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('No changes to save')));
+    }
   }
 
   @override
   void dispose() {
+    if (_debounce?.isActive ?? false) {
+      _debounce!.cancel();
+      _saveNote();
+    }
     _controller.dispose();
     _focusNode.dispose();
     _scrollController.dispose();
@@ -86,7 +140,8 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
               ),
               IconButton(
                 onPressed: () {
-                  // ToDo : Implement manual save operation
+                  if (_debounce?.isActive ?? false) _debounce!.cancel();
+                  _saveNote(showSnackbar: true);
                 },
                 icon: const Icon(Iconsax.archive, color: Colors.white38),
               ),
