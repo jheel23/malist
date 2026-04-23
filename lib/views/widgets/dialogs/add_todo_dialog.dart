@@ -24,7 +24,7 @@ class _AddTodoDialogState extends ConsumerState<AddTodoDialog> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       final newTodo = ToDoModel(
-        id: "", // ID handled by tostore
+        id: "",
         description: _descController.text.trim(),
         dateTime: DateTime.now(),
         status: false,
@@ -41,7 +41,9 @@ class _AddTodoDialogState extends ConsumerState<AddTodoDialog> {
       backgroundColor: theme.colorScheme.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(1),
-        side: BorderSide(color: theme.colorScheme.primary.withValues(alpha: 0.2)),
+        side: BorderSide(
+          color: theme.colorScheme.primary.withValues(alpha: 0.2),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -65,8 +67,9 @@ class _AddTodoDialogState extends ConsumerState<AddTodoDialog> {
                   labelText: "Description",
                   hintText: "What do you need to do?",
                 ),
-                validator: (value) =>
-                    value == null || value.trim().isEmpty ? "Description is required" : null,
+                validator: (value) => value == null || value.trim().isEmpty
+                    ? "Description is required"
+                    : null,
               ),
               const SizedBox(height: 32),
               Row(
@@ -80,7 +83,9 @@ class _AddTodoDialogState extends ConsumerState<AddTodoDialog> {
                   ElevatedButton(
                     onPressed: _submit,
                     style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(1),
+                      ),
                     ),
                     child: Text("ADD", style: TextStyle(letterSpacing: 1)),
                   ),

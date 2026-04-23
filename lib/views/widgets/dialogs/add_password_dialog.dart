@@ -29,7 +29,7 @@ class _AddPasswordDialogState extends ConsumerState<AddPasswordDialog> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       final newPassword = PasswordModel(
-        id: "", // ID handled by tostore
+        id: "",
         username: _usernameController.text.trim(),
         category: _categoryController.text.trim(),
         password: _passwordController.text.trim(),
@@ -80,11 +80,11 @@ class _AddPasswordDialogState extends ConsumerState<AddPasswordDialog> {
               TextFormField(
                 controller: _categoryController,
                 decoration: const InputDecoration(
-                  labelText: "Category / Site",
-                  hintText: "e.g., Google, Bank, Social",
+                  labelText: "Title / Category",
+                  hintText: "e.g., Google, Socials, Onlyfans",
                 ),
                 validator: (value) => value == null || value.trim().isEmpty
-                    ? "Category is required"
+                    ? "Title is required"
                     : null,
               ),
               const SizedBox(height: 16),

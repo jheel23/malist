@@ -26,7 +26,7 @@ class _AddNoteDialogState extends ConsumerState<AddNoteDialog> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       final newNote = NotesModel(
-        id: "", // ID handled by tostore
+        id: "",
         title: _titleController.text.trim(),
         description: _descController.text.trim(),
         dateTime: DateTime.now(),
@@ -43,7 +43,9 @@ class _AddNoteDialogState extends ConsumerState<AddNoteDialog> {
       backgroundColor: theme.colorScheme.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(1),
-        side: BorderSide(color: theme.colorScheme.primary.withValues(alpha: 0.2)),
+        side: BorderSide(
+          color: theme.colorScheme.primary.withValues(alpha: 0.2),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -66,8 +68,9 @@ class _AddNoteDialogState extends ConsumerState<AddNoteDialog> {
                   labelText: "Title",
                   hintText: "Enter note title",
                 ),
-                validator: (value) =>
-                    value == null || value.trim().isEmpty ? "Title is required" : null,
+                validator: (value) => value == null || value.trim().isEmpty
+                    ? "Title is required"
+                    : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -77,8 +80,9 @@ class _AddNoteDialogState extends ConsumerState<AddNoteDialog> {
                   labelText: "Description",
                   hintText: "Enter note content...",
                 ),
-                validator: (value) =>
-                    value == null || value.trim().isEmpty ? "Description is required" : null,
+                validator: (value) => value == null || value.trim().isEmpty
+                    ? "Description is required"
+                    : null,
               ),
               const SizedBox(height: 32),
               Row(
@@ -92,7 +96,9 @@ class _AddNoteDialogState extends ConsumerState<AddNoteDialog> {
                   ElevatedButton(
                     onPressed: _submit,
                     style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(1),
+                      ),
                     ),
                     child: Text("ADD", style: TextStyle(letterSpacing: 1)),
                   ),

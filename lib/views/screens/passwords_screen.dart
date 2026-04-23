@@ -224,6 +224,8 @@ class _PasswordsScreenState extends ConsumerState<PasswordsScreen> {
                                     crossAxisAlignment: .start,
                                     mainAxisSize: .min,
                                     children: [
+                                      Text(passwords[index].category),
+                                      SizedBox(height: 5),
                                       Text(
                                         passwords[index].username.replaceRange(
                                           (passwords[index].username.length > 4)

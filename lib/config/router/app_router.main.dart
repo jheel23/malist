@@ -7,6 +7,7 @@ class RoutePathHelper {
   static String noteDetail = "/home/notes/noteDetail";
   static String todo = "/home/todo";
   static String passwords = "/home/passwords";
+  static String settings = "/home/settings";
 }
 
 final goRouterProvider = Provider<GoRouter>((ref) {
@@ -44,6 +45,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             path: 'passwords',
             builder: (context, state) {
               return PasswordsScreen();
+            },
+          ),
+          GoRoute(
+            path: 'settings',
+            builder: (context, state) {
+              return SettingsScreen();
             },
           ),
         ],
