@@ -118,8 +118,25 @@ class _PasswordsScreenState extends ConsumerState<PasswordsScreen> {
                       return Dismissible(
                         key: Key(password.id),
                         direction: DismissDirection.endToStart,
-                        onDismissed: (direction) {
-                          _showDeleteDialog(context, password.id);
+                        // onUpdate: (details) async {
+                        //   if (details.progress > 0.5) {
+                        //     final dismissResult = await _showDeleteDialog(
+                        //       context,
+                        //       password.id,
+                        //     );
+                        //     if (dismissResult == false) {
+                        //       ref
+                        //           .read(passwordsNotifierProvider.notifier)
+                        //           .getPasswords();
+                        //     }
+                        //   }
+                        // },
+                        confirmDismiss: (direction) async {
+                          final dismissResult = await _showDeleteDialog(
+                            context,
+                            password.id,
+                          );
+                          return dismissResult;
                         },
                         background: Container(
                           padding: EdgeInsets.all(20),
@@ -300,26 +317,30 @@ class _PasswordsScreenState extends ConsumerState<PasswordsScreen> {
     );
   }
 
-  void _showDeleteDialog(BuildContext context, String id) {
-    showDialog(
+  Future<bool> _showDeleteDialog(BuildContext context, String id) async {
+    final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text("Delete"),
         content: Text("Are you sure you want to delete this password?"),
         actions: [
-          TextButton(onPressed: () => context.pop(), child: Text("Cancel")),
+          TextButton(
+            onPressed: () => context.pop(false),
+            child: Text("Cancel"),
+          ),
           TextButton(
             onPressed: () async {
               await ref
                   .read(passwordsNotifierProvider.notifier)
                   .deletePassword(id);
               if (!context.mounted) return;
-              context.pop();
+              context.pop(true);
             },
             child: Text("Delete"),
           ),
         ],
       ),
     );
+    return result ?? false;
   }
 }

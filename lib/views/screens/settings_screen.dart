@@ -364,7 +364,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   "Encryption: AES-256 ACTIVE\n"
                   "--------------------------------\n"
                   "Ready to capture your thoughts...",
-                  speed: const Duration(milliseconds: 100),
+                  speed: const Duration(milliseconds: 40),
                 ),
               ],
               totalRepeatCount: 1,

@@ -88,13 +88,16 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
                         child: notesPreviewCard(
                           context,
                           theme,
-                          index: index,
+                          id: note.id,
                           title: note.title,
                           description: note.description,
                           date: note.dateTime,
                         ),
                       );
                     }),
+
+                  // Scroll Overhead
+                  SizedBox(height: 100),
                 ],
               ),
             );
@@ -107,7 +110,7 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
   Container notesPreviewCard(
     BuildContext context,
     ThemeData theme, {
-    required int index,
+    required String id,
     required String title,
     required String description,
     required DateTime date,
@@ -162,7 +165,7 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
               ),
               const Spacer(),
               IconButton(
-                onPressed: () => _showConfirmDeleteDialog(context),
+                onPressed: () => _showConfirmDeleteDialog(context, id: id),
                 icon: Icon(
                   Iconsax.trash,
                   color: theme.primaryColor.withValues(alpha: 0.7),
@@ -175,7 +178,7 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
     );
   }
 
-  void _showConfirmDeleteDialog(BuildContext context) {
+  void _showConfirmDeleteDialog(BuildContext context, {required String id}) {
     showDialog(
       context: context,
       builder: (context) {
@@ -189,7 +192,8 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
             ),
             TextButton(
               onPressed: () {
-                // ToDo: Delete Note
+                ref.read(notesNotifierProvider.notifier).deleteNote(id);
+                context.pop();
               },
               child: const Text("Delete"),
             ),
