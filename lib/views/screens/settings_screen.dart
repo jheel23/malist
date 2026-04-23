@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -277,8 +278,100 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
             ),
             const SizedBox(height: 60),
+            _buildAboutWidget(theme),
+            const SizedBox(height: 40),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildAboutWidget(ThemeData theme) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D0D0D),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.white10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.5),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 10,
+                height: 10,
+                decoration: const BoxDecoration(
+                  color: Colors.redAccent,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Container(
+                width: 10,
+                height: 10,
+                decoration: const BoxDecoration(
+                  color: Colors.amber,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Container(
+                width: 10,
+                height: 10,
+                decoration: const BoxDecoration(
+                  color: Colors.greenAccent,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                "bash v0.99 — About",
+                style: TextStyle(
+                  color: Colors.white38,
+                  fontSize: 10,
+                  fontFamily: 'Courier',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          DefaultTextStyle(
+            style: const TextStyle(
+              color: Color(0xFF00FF41),
+              fontFamily: 'Courier',
+              fontSize: 13,
+              height: 1.4,
+            ),
+            child: AnimatedTextKit(
+              animatedTexts: [
+                TypewriterAnimatedText(
+                  ">> user@malist:~\$ whoami\n"
+                  ">> echo \"I AM THE MUSIC is here! 𝄞 𝄫\";\n"
+                  ">> GitHub: github.com/jheel23\n"
+                  ">> --------------------------------\n"
+                  ">> System: Malist OS v1.0.1\n"
+                  ">> Uptime: ${DateTime.now().toIso8601String().split('.')[0]}\n"
+                  "Encryption: AES-256 ACTIVE\n"
+                  "--------------------------------\n"
+                  "Ready to capture your thoughts...",
+                  speed: const Duration(milliseconds: 100),
+                ),
+              ],
+              totalRepeatCount: 1,
+              displayFullTextOnTap: true,
+            ),
+          ),
+        ],
       ),
     );
   }
