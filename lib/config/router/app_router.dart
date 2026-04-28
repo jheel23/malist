@@ -1,11 +1,16 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:malist/core/constants/storage_keys.dart';
+import 'package:malist/core/local/secure_storage_service.dart';
 import 'package:malist/data/models/notes/notes_model.dart';
+import 'package:malist/service_locator.dart';
 import 'package:malist/views/screens/home_screen.dart';
 import 'package:malist/views/screens/note_detail_screen.dart';
 import 'package:malist/views/screens/notes_screen.dart';
+import 'package:malist/views/screens/onboarding_screen.dart';
 import 'package:malist/views/screens/passwords_screen.dart';
 import 'package:malist/views/screens/settings_screen.dart';
 import 'package:malist/views/screens/todo_screen.dart';
 
-part "app_router.main.dart";
+part 'app_router.main.dart';

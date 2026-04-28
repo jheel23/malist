@@ -58,7 +58,7 @@ class SecureStorageService implements StorageService {
     return null;
   }
 
-  /// Save a List<Map<String, dynamic>> securely
+  /// Save a `List<Map<String, dynamic>>` securely
   // @override
   // Future<void> setListMap(String key, List<Map<String, dynamic>> value) async {
   //   try {
@@ -69,7 +69,7 @@ class SecureStorageService implements StorageService {
   //   }
   // }
 
-  /// Read a List<Map<String, dynamic>> from secure storage
+  /// Read a `List<Map<String, dynamic>>` from secure storage
   // @override
   // Future<List<Map<String, dynamic>>> getListMap(String key) async {
   //   try {

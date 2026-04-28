@@ -10,6 +10,7 @@ abstract class NotesModel with _$NotesModel {
     required String title,
     required String description,
     required DateTime dateTime,
+    @Default(false) bool isPinned,
   }) = _NotesModel;
 
   factory NotesModel.fromJson(Map<String, dynamic> json) =>

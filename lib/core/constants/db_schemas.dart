@@ -15,6 +15,7 @@ class DbSchemas {
         FieldSchema(name: 'title', type: DataType.text),
         FieldSchema(name: 'description', type: DataType.text),
         FieldSchema(name: 'dateTime', type: DataType.text),
+        FieldSchema(name: 'isPinned', type: DataType.boolean),
       ],
     ),
 

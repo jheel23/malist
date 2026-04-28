@@ -46,10 +46,12 @@ class TodoRepoImpl implements TodoRepo {
   Future<Either<Failure, List<ToDoModel>>> getTodos() async {
     try {
       final result = await databaseService.getAllRecords(_tableName);
-      return result.fold(
-        (failure) => Left(failure),
-        (value) => Right(value.map((e) => ToDoModel.fromJson(e)).toList()),
-      );
+      return result.fold((failure) => Left(failure), (value) {
+        final todos = value.map((e) => ToDoModel.fromJson(e)).toList()
+          ..sort((a, b) => b.dateTime.compareTo(a.dateTime));
+
+        return Right(todos);
+      });
     } catch (e) {
       return Left(GeneralFailure(e.toString()));
     }

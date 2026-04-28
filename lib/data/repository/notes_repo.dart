@@ -46,10 +46,15 @@ class NotesRepoImpl implements NotesRepo {
   Future<Either<Failure, List<NotesModel>>> getNotes() async {
     try {
       final result = await databaseService.getAllRecords(_tableName);
-      return result.fold(
-        (failure) => Left(failure),
-        (value) => Right(value.map((e) => NotesModel.fromJson(e)).toList()),
-      );
+      return result.fold((failure) => Left(failure), (value) {
+        final notes = value.map((e) => NotesModel.fromJson(e)).toList()
+          ..sort((a, b) {
+            if (a.isPinned != b.isPinned) return a.isPinned ? -1 : 1;
+            return b.dateTime.compareTo(a.dateTime);
+          });
+
+        return Right(notes);
+      });
     } catch (e) {
       return Left(GeneralFailure(e.toString()));
     }

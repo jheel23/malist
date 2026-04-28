@@ -81,10 +81,20 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
                     // Notes Preview Card
                     ...List.generate(notes.length, (index) {
                       final note = notes[index];
+
+                      Future<void> togglePinned() {
+                        return ref
+                            .read(notesNotifierProvider.notifier)
+                            .updateNote(
+                              note.copyWith(isPinned: !note.isPinned),
+                            );
+                      }
+
                       return GestureDetector(
                         onTap: () {
                           context.push(RoutePathHelper.noteDetail, extra: note);
                         },
+                        onLongPress: () => togglePinned(),
                         child: notesPreviewCard(
                           context,
                           theme,
@@ -92,6 +102,8 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
                           title: note.title,
                           description: note.description,
                           date: note.dateTime,
+                          isPinned: note.isPinned,
+                          onTogglePinned: () => togglePinned(),
                         ),
                       );
                     }),
@@ -107,21 +119,38 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
     );
   }
 
-  Container notesPreviewCard(
+  Widget notesPreviewCard(
     BuildContext context,
     ThemeData theme, {
     required String id,
     required String title,
     required String description,
     required DateTime date,
+    required bool isPinned,
+    required VoidCallback onTogglePinned,
   }) {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 260),
+      curve: Curves.easeOutCubic,
       padding: EdgeInsets.all(20),
       margin: .all(20),
       width: .infinity,
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor.withValues(alpha: 0.08),
+        color: Theme.of(
+          context,
+        ).primaryColor.withValues(alpha: isPinned ? 0.15 : 0.08),
         borderRadius: BorderRadius.circular(1),
+        border: Border.all(
+          color: theme.primaryColor.withValues(alpha: isPinned ? 0.34 : 0.08),
+        ),
+        boxShadow: [
+          if (isPinned)
+            BoxShadow(
+              color: theme.primaryColor.withValues(alpha: 0.08),
+              blurRadius: 28,
+              offset: const Offset(0, 16),
+            ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +167,23 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 8),
+              IconButton(
+                onPressed: onTogglePinned,
+                tooltip: isPinned ? "Unpin" : "Pin",
+                icon: AnimatedScale(
+                  scale: isPinned ? 1.1 : 1,
+                  duration: const Duration(milliseconds: 220),
+                  curve: Curves.easeOutBack,
+                  child: Icon(
+                    isPinned ? Icons.push_pin : Icons.push_pin_outlined,
+                    color: theme.primaryColor.withValues(
+                      alpha: isPinned ? 0.9 : 0.35,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 4),
               Transform.rotate(
                 angle: -180 / 4,
                 child: Icon(

@@ -2,6 +2,9 @@ part of 'app_router.dart';
 
 class RoutePathHelper {
   RoutePathHelper._();
+
+  static String launch = "/";
+  static String onboarding = "/onboarding";
   static String home = "/home";
   static String notes = "/home/notes";
   static String noteDetail = "/home/notes/noteDetail";
@@ -12,19 +15,23 @@ class RoutePathHelper {
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/home',
+    initialLocation: RoutePathHelper.launch,
     routes: [
       GoRoute(
-        path: '/home',
-        builder: (context, state) {
-          return HomeScreen();
-        },
+        path: RoutePathHelper.launch,
+        builder: (context, state) => const _OnboardingGateScreen(),
+      ),
+      GoRoute(
+        path: RoutePathHelper.onboarding,
+        builder: (context, state) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: RoutePathHelper.home,
+        builder: (context, state) => const HomeScreen(),
         routes: [
           GoRoute(
             path: 'notes',
-            builder: (context, state) {
-              return NotesScreen();
-            },
+            builder: (context, state) => const NotesScreen(),
             routes: [
               GoRoute(
                 path: 'noteDetail',
@@ -37,24 +44,62 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: 'todo',
-            builder: (context, state) {
-              return TodoScreen();
-            },
+            builder: (context, state) => const TodoScreen(),
           ),
           GoRoute(
             path: 'passwords',
-            builder: (context, state) {
-              return PasswordsScreen();
-            },
+            builder: (context, state) => const PasswordsScreen(),
           ),
           GoRoute(
             path: 'settings',
-            builder: (context, state) {
-              return SettingsScreen();
-            },
+            builder: (context, state) => const SettingsScreen(),
           ),
         ],
       ),
     ],
   );
 });
+
+class _OnboardingGateScreen extends StatefulWidget {
+  const _OnboardingGateScreen();
+
+  @override
+  State<_OnboardingGateScreen> createState() => _OnboardingGateScreenState();
+}
+
+class _OnboardingGateScreenState extends State<_OnboardingGateScreen> {
+  late final Future<bool> _hasCompletedOnboarding;
+
+  @override
+  void initState() {
+    super.initState();
+    _hasCompletedOnboarding = sl<SecureStorageService>()
+        .getBool(StorageKeys.hasCompletedOnboarding)
+        .then((value) => value ?? false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: _hasCompletedOnboarding,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Scaffold(
+            backgroundColor: Colors.black,
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+
+          context.go(
+            snapshot.data! ? RoutePathHelper.home : RoutePathHelper.onboarding,
+          );
+        });
+
+        return const Scaffold(backgroundColor: Colors.black);
+      },
+    );
+  }
+}

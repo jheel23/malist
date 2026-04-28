@@ -232,31 +232,37 @@ class _HomePageState extends ConsumerState<HomeScreen> {
                   final tasksState = ref.watch(todoProvider);
                   return tasksState.when(
                     loaded: (data) {
-                      if (data.isEmpty) {
+                      final unfinishedTasks = data
+                          .where((task) => task.status == false)
+                          .toList();
+
+                      if (unfinishedTasks.isEmpty) {
                         return Center(
                           child: NoDataWidget(
                             icon: Icons.task_alt,
-                            message: "No tasks yet",
+                            message: "No unfinished tasks",
                             widgetSize: null,
                           ),
                         );
                       }
                       return ListView.builder(
-                        itemCount: data.length > 3 ? 3 : data.length,
+                        itemCount: unfinishedTasks.length > 3
+                            ? 3
+                            : unfinishedTasks.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          final task = data[index];
+                          final task = unfinishedTasks[index];
                           return ListTile(
+                            onLongPress: () async {
+                              await ref
+                                  .read(todoProvider.notifier)
+                                  .deleteTodo(task.id);
+                            },
                             leading: GestureDetector(
                               onLongPress: () async {
-                                if (task.status == null) {
-                                  final updatedTodo = task.copyWith(
-                                    status: false,
-                                  );
-                                  await ref
-                                      .read(todoProvider.notifier)
-                                      .updateTodo(updatedTodo);
-                                }
+                                await ref
+                                    .read(todoProvider.notifier)
+                                    .deleteTodo(task.id);
                               },
                               child: Checkbox.adaptive(
                                 value: task.status,

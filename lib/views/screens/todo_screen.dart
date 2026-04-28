@@ -41,10 +41,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
             transitionBuilder: (context, anim1, anim2, child) {
               return Transform.scale(
                 scale: 0.95 + (0.05 * anim1.value),
-                child: FadeTransition(
-                  opacity: anim1,
-                  child: child,
-                ),
+                child: FadeTransition(opacity: anim1, child: child),
               );
             },
           );
@@ -110,14 +107,16 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                   itemBuilder: (context, index) {
                     final todo = notCompletedTodos[index];
                     return ListTile(
+                      onLongPress: () async {
+                        await ref
+                            .read(todoProvider.notifier)
+                            .deleteTodo(todo.id);
+                      },
                       leading: GestureDetector(
                         onLongPress: () async {
-                          if (todo.status == null) {
-                            final updatedTodo = todo.copyWith(status: false);
-                            await ref
-                                .read(todoProvider.notifier)
-                                .updateTodo(updatedTodo);
-                          }
+                          await ref
+                              .read(todoProvider.notifier)
+                              .deleteTodo(todo.id);
                         },
                         child: Checkbox.adaptive(
                           value: todo.status,
@@ -159,14 +158,14 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                 itemBuilder: (context, index) {
                   final todo = completedTodos[index];
                   return ListTile(
+                    onLongPress: () async {
+                      await ref.read(todoProvider.notifier).deleteTodo(todo.id);
+                    },
                     leading: GestureDetector(
                       onLongPress: () async {
-                        if (todo.status == null) {
-                          final updatedTodo = todo.copyWith(status: false);
-                          await ref
-                              .read(todoProvider.notifier)
-                              .updateTodo(updatedTodo);
-                        }
+                        await ref
+                            .read(todoProvider.notifier)
+                            .deleteTodo(todo.id);
                       },
                       child: Checkbox.adaptive(
                         value: todo.status,

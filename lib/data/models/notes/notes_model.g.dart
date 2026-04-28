@@ -11,6 +11,7 @@ _NotesModel _$NotesModelFromJson(Map<String, dynamic> json) => _NotesModel(
   title: json['title'] as String,
   description: json['description'] as String,
   dateTime: DateTime.parse(json['dateTime'] as String),
+  isPinned: json['isPinned'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$NotesModelToJson(_NotesModel instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$NotesModelToJson(_NotesModel instance) =>
       'title': instance.title,
       'description': instance.description,
       'dateTime': instance.dateTime.toIso8601String(),
+      'isPinned': instance.isPinned,
     };

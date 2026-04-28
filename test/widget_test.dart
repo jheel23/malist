@@ -1,30 +1,32 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:malist/main.dart';
+import 'package:malist/config/theme/app_theme.dart';
+import 'package:malist/views/screens/onboarding_screen.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Onboarding smoke test', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.trueBlackTheme,
+        home: const OnboardingScreen(),
+      ),
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.pump(const Duration(milliseconds: 300));
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    expect(find.text('M A L I S T'), findsOneWidget);
+    expect(find.text('Welcome to Malist.'), findsOneWidget);
+    expect(find.text('Zero clutter. Absolute focus.'), findsOneWidget);
+    expect(find.text('NEXT'), findsOneWidget);
+
+    await tester.tap(find.byType(ElevatedButton));
     await tester.pump();
+    await tester.pump(const Duration(milliseconds: 650));
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('True Black.'), findsOneWidget);
+    expect(
+      find.text('Designed for your eyes and your battery.'),
+      findsOneWidget,
+    );
   });
 }
