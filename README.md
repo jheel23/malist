@@ -218,7 +218,7 @@ lib/
 | Platform | Support Status | Notes |
 |----------|----------------|-------|
 | **Android** | ✅ Supported | Requires minSdk 21, uses KeyStore for encryption keys. |
-| **iOS** | ✅ Supported | Requires iOS 12.0+, uses Keychain services. |
+| **iOS** | 🔧 TESTING | Requires iOS 12.0+, COMING SOON. |
 | **macOS** | ⚠️ Unofficial | Not actively tested. |
 | **Windows** | ⚠️ Unofficial | Not actively tested. |
 | **Linux** | ⚠️ Unofficial | Not actively tested. |
