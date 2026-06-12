@@ -65,8 +65,9 @@ class _BackupSettingsScreenState extends ConsumerState<BackupSettingsScreen>
     final bytes = int.tryParse(bytesStr) ?? 0;
     if (bytes < 1024) return '$bytes B';
     if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    if (bytes < 1024 * 1024 * 1024)
+    if (bytes < 1024 * 1024 * 1024) {
       return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    }
     return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
   }
 
@@ -569,7 +570,7 @@ class _BackupSettingsScreenState extends ConsumerState<BackupSettingsScreen>
 
     final isLoading =
         backupState is AsyncLoading ||
-        backupState.whenOrNull(loading: (_, __, ___) => true) == true;
+        backupState.whenOrNull(loading: (_, _, _) => true) == true;
 
     return Scaffold(
       appBar: AppBar(
