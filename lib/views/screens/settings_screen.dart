@@ -336,12 +336,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               animatedTexts: [
                 TypewriterAnimatedText(
                   ">> user@malist:~\$ whoami\n"
-                  ">> echo \"I AM THE MUSIC is here! 𝄞 𝄫\";\n"
+                  ">> echo \"MUSIC is here! 𝄞 𝄫\";\n"
                   ">> GitHub: github.com/jheel23\n"
                   ">> --------------------------------\n"
-                  ">> System: Malist OS v1.0.1\n"
+                  ">> System: Malist - v1.0.2\n"
                   ">> Uptime: ${DateTime.now().toIso8601String().split('.')[0]}\n"
-                  "Encryption: AES-256 ACTIVE\n"
+                  "© 2026 Jheel Johari. Licensed under GNU GPLv3.\n"
                   "--------------------------------\n"
                   "Ready to capture your thoughts...",
                   speed: const Duration(milliseconds: 40),
