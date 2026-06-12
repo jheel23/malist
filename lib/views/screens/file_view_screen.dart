@@ -121,7 +121,13 @@ class _FileViewScreenState extends ConsumerState<FileViewScreen> {
   }
 
   void _shareFile() {
-    Share.shareXFiles([XFile(_file.filePath)]);
+    final box = context.findRenderObject() as RenderBox?;
+    Share.shareXFiles(
+      [XFile(_file.filePath)],
+      sharePositionOrigin: box != null
+          ? box.localToGlobal(Offset.zero) & box.size
+          : null,
+    );
   }
 
   void _openExternally() {

@@ -78,7 +78,7 @@ class _PasswordsScreenState extends ConsumerState<PasswordsScreen> {
                         Text('Vault', style: theme.textTheme.displayMedium),
                         Text(
                           'SECURE STORAGE',
-                          style: theme.textTheme.bodySmall,
+                          style: theme.textTheme.labelSmall,
                         ),
                       ],
                     ),

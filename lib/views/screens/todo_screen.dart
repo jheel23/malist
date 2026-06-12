@@ -85,7 +85,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                             Text('To-Do', style: theme.textTheme.displayMedium),
                             Text(
                               ' ${todos.length} TASKS',
-                              style: theme.textTheme.bodySmall,
+                              style: theme.textTheme.labelSmall,
                             ),
                           ],
                         ),

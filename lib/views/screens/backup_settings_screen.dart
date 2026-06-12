@@ -1062,9 +1062,25 @@ class _BackupSettingsScreenState extends ConsumerState<BackupSettingsScreen>
                       size: 18,
                       color: theme.primaryColor.withValues(alpha: 0.6),
                     ),
-                    onPressed: () => Share.shareXFiles([XFile(file.path)]),
+                    onPressed: () {
+                      final box = context.findRenderObject() as RenderBox?;
+                      Share.shareXFiles(
+                        [XFile(file.path)],
+                        sharePositionOrigin: box != null
+                            ? box.localToGlobal(Offset.zero) & box.size
+                            : null,
+                      );
+                    },
                   ),
-                  onTap: () => Share.shareXFiles([XFile(file.path)]),
+                  onTap: () {
+                    final box = context.findRenderObject() as RenderBox?;
+                    Share.shareXFiles(
+                      [XFile(file.path)],
+                      sharePositionOrigin: box != null
+                          ? box.localToGlobal(Offset.zero) & box.size
+                          : null,
+                    );
+                  },
                 );
               }).toList(),
             ),

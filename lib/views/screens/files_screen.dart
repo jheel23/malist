@@ -280,12 +280,15 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
     final e = ext.toLowerCase();
     if (_isImageExt(e)) return Icons.image_outlined;
     if (e == 'pdf') return Icons.picture_as_pdf_outlined;
-    if (['mp4', 'mov', 'avi', 'mkv'].contains(e))
+    if (['mp4', 'mov', 'avi', 'mkv'].contains(e)) {
       return Icons.videocam_outlined;
-    if (['mp3', 'wav', 'aac', 'm4a'].contains(e))
+    }
+    if (['mp3', 'wav', 'aac', 'm4a'].contains(e)) {
       return Icons.audiotrack_outlined;
-    if (['doc', 'docx', 'txt', 'rtf'].contains(e))
+    }
+    if (['doc', 'docx', 'txt', 'rtf'].contains(e)) {
       return Icons.description_outlined;
+    }
     if (['xls', 'xlsx', 'csv'].contains(e)) return Icons.table_chart_outlined;
     if (['ppt', 'pptx'].contains(e)) return Icons.slideshow_outlined;
     if (['zip', 'rar', '7z'].contains(e)) return Icons.folder_zip_outlined;
@@ -345,7 +348,7 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
                         Text('Files', style: theme.textTheme.displayMedium),
                         Text(
                           'SECURE STORAGE',
-                          style: theme.textTheme.bodySmall,
+                          style: theme.textTheme.labelSmall,
                         ),
                       ],
                     ),
@@ -421,7 +424,7 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 itemCount: FileCategory.values.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
+                separatorBuilder: (_, _) => const SizedBox(width: 8),
                 itemBuilder: (_, index) {
                   final cat = FileCategory.values[index];
                   final selected = cat == _selectedCategory;
