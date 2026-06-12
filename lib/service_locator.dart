@@ -8,7 +8,7 @@ import 'package:malist/data/repository/files_repo.dart';
 import 'package:malist/data/repository/notes_repo.dart';
 import 'package:malist/data/repository/passwords_repo.dart';
 import 'package:malist/data/repository/todo_repo.dart';
-import 'package:malist/data/source/backup_storage_provider.dart';
+import 'package:malist/data/source/backup_storage_service.dart';
 import 'package:malist/data/source/core_service.dart';
 import 'package:malist/data/source/database_service.dart';
 import 'package:malist/providers/backup/backup_provider.dart';

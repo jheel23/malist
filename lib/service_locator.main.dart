@@ -17,14 +17,14 @@ Future<void> initServiceLocator() async {
     DatabaseServiceImpl(secureStorage: sl<SecureStorageService>()),
   );
 
-  sl.registerSingleton<LocalBackupStorageProvider>(
-    LocalBackupStorageProvider(backupDir: await _getBackupDirectory()),
+  sl.registerSingleton<BackupStorageServiceImpl>(
+    BackupStorageServiceImpl(backupDir: await _getBackupDirectory()),
   );
 
   sl.registerSingleton<CoreServiceSource>(
     CoreServiceSourceImpl(
       databaseService: sl<DatabaseService>(),
-      backupStorageProvider: sl<LocalBackupStorageProvider>(),
+      backupStorageProvider: sl<BackupStorageServiceImpl>(),
     ),
   );
 
@@ -63,7 +63,7 @@ Future<void> initServiceLocator() async {
     () => BackupNotifier(
       repo: sl<CoreServiceRepo>(),
       storage: sl<SecureStorageService>(),
-      backupStorage: sl<LocalBackupStorageProvider>(),
+      backupStorage: sl<BackupStorageServiceImpl>(),
     ),
   );
 }

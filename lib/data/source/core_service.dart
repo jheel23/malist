@@ -6,7 +6,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:malist/core/failures.dart';
 import 'package:malist/core/utils/encryption_helper.dart';
-import 'package:malist/data/source/backup_storage_provider.dart';
+import 'package:malist/data/source/backup_storage_service.dart';
 import 'package:malist/data/source/database_service.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -29,7 +29,7 @@ abstract class CoreServiceSource {
 
 class CoreServiceSourceImpl implements CoreServiceSource {
   final DatabaseService databaseService;
-  final LocalBackupStorageProvider backupStorageProvider;
+  final BackupStorageServiceImpl backupStorageProvider;
 
   CoreServiceSourceImpl({
     required this.databaseService,

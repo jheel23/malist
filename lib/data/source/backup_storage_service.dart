@@ -1,15 +1,15 @@
 import 'dart:io';
 
-abstract class BackupStorageProvider {
+abstract class BackupStorageService {
   Future<File> saveBackup(File zipFile);
   Future<File?> retrieveBackup();
   Future<List<File>> listBackups();
   Future<void> deleteBackup(File backup);
 }
 
-class LocalBackupStorageProvider implements BackupStorageProvider {
+class BackupStorageServiceImpl implements BackupStorageService {
   final Directory backupDir;
-  LocalBackupStorageProvider({required this.backupDir});
+  BackupStorageServiceImpl({required this.backupDir});
 
   @override
   Future<File> saveBackup(File zipFile) async {

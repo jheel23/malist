@@ -3,14 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:malist/core/constants/storage_keys.dart';
 import 'package:malist/core/local/secure_storage_service.dart';
 import 'package:malist/data/repository/core_service_repo.dart';
-import 'package:malist/data/source/backup_storage_provider.dart';
+import 'package:malist/data/source/backup_storage_service.dart';
 import 'package:malist/providers/backup/state/backup_state.dart';
 import 'package:malist/service_locator.dart';
 
 class BackupNotifier extends Notifier<BackupState> {
   final CoreServiceRepo repo;
   final SecureStorageService storage;
-  final LocalBackupStorageProvider backupStorage;
+  final BackupStorageServiceImpl backupStorage;
 
   BackupNotifier({
     required this.repo,

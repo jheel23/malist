@@ -1,3 +1,6 @@
+// DEV NOTE : Hey there! If you are contributing, thanks a lot.
+// Don't mess up the project architecture. Your PR will be ignored.
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
