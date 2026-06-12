@@ -65,6 +65,7 @@ class DbSchemas {
         FieldSchema(name: 'createdAt', type: DataType.text),
         FieldSchema(name: 'source', type: DataType.text),
         FieldSchema(name: 'isFavorite', type: DataType.boolean),
+        FieldSchema(name: 'checksum', type: DataType.text),
       ],
     ),
   ];

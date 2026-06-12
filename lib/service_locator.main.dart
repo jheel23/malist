@@ -8,27 +8,29 @@ Future<void> initServiceLocator() async {
   sl.registerLazySingleton(() => secureStorageService);
   sl.registerLazySingleton(() => Dio());
 
-  //Dio client initialization...
   sl.registerLazySingleton(() => DioClient(ApiEndpoints.baseUrl, sl()));
 
   // ----------------------------------------------------------------------
   //? Services/Sources
   // ----------------------------------------------------------------------
-  // sl.registerSingleton<DemandItemsApiService>(DemandItemsApiServiceImpl(sl()));
   sl.registerSingleton<DatabaseService>(
     DatabaseServiceImpl(secureStorage: sl<SecureStorageService>()),
   );
+
+  sl.registerSingleton<LocalBackupStorageProvider>(
+    LocalBackupStorageProvider(backupDir: await _getBackupDirectory()),
+  );
+
   sl.registerSingleton<CoreServiceSource>(
     CoreServiceSourceImpl(
       databaseService: sl<DatabaseService>(),
-      secureStorageService: sl<SecureStorageService>(),
+      backupStorageProvider: sl<LocalBackupStorageProvider>(),
     ),
   );
 
   // ----------------------------------------------------------------------
   //? Repositories
   // ----------------------------------------------------------------------
-  // sl.registerSingleton<DemandItemsRepo>(DemandItemsRepoImp(sl()));
   sl.registerSingleton<NotesRepo>(
     NotesRepoImpl(databaseService: sl<DatabaseService>()),
   );
@@ -44,6 +46,7 @@ Future<void> initServiceLocator() async {
   sl.registerSingleton<FilesRepo>(
     FilesRepoImpl(databaseService: sl<DatabaseService>()),
   );
+
   sl.registerSingleton<CoreServiceRepo>(
     CoreServiceRepoImpl(source: sl<CoreServiceSource>()),
   );
@@ -51,11 +54,25 @@ Future<void> initServiceLocator() async {
   // ----------------------------------------------------------------------
   //? Providers
   // ----------------------------------------------------------------------
-  // sl.registerFactory(() => DemandItemsNotifier(sl<GetDemandItemsUseCase>()));
-
   sl.registerFactory(() => NotesNotifier(repository: sl<NotesRepo>()));
   sl.registerFactory(() => PasswordsNotifier(repository: sl<PasswordsRepo>()));
   sl.registerFactory(() => TodoNotifier(repository: sl<TodoRepo>()));
   sl.registerFactory(() => FilesNotifier(repository: sl<FilesRepo>()));
   sl.registerFactory(() => CoreServiceNotifier(repo: sl<CoreServiceRepo>()));
+  sl.registerFactory(
+    () => BackupNotifier(
+      repo: sl<CoreServiceRepo>(),
+      storage: sl<SecureStorageService>(),
+      backupStorage: sl<LocalBackupStorageProvider>(),
+    ),
+  );
+}
+
+Future<Directory> _getBackupDirectory() async {
+  final appDir = await getApplicationDocumentsDirectory();
+  final backupDir = Directory('${appDir.path}/malist_backups');
+  if (!await backupDir.exists()) {
+    await backupDir.create(recursive: true);
+  }
+  return backupDir;
 }

@@ -17,6 +17,7 @@ _UserFile _$UserFileFromJson(Map<String, dynamic> json) => _UserFile(
   createdAt: DateTime.parse(json['createdAt'] as String),
   source: $enumDecode(_$FileSourceEnumMap, json['source']),
   isFavorite: json['isFavorite'] as bool? ?? false,
+  checksum: json['checksum'] as String? ?? '',
 );
 
 Map<String, dynamic> _$UserFileToJson(_UserFile instance) => <String, dynamic>{
@@ -30,6 +31,7 @@ Map<String, dynamic> _$UserFileToJson(_UserFile instance) => <String, dynamic>{
   'createdAt': instance.createdAt.toIso8601String(),
   'source': _$FileSourceEnumMap[instance.source]!,
   'isFavorite': instance.isFavorite,
+  'checksum': instance.checksum,
 };
 
 const _$FileSourceEnumMap = {

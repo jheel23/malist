@@ -8,6 +8,8 @@ import 'package:malist/core/constants/asssets.dart';
 import 'package:malist/providers/todo/state/todo_state.dart';
 import 'package:malist/providers/todo/todo_provider.dart';
 import 'package:malist/views/widgets/no_data_widget.dart';
+import 'package:malist/views/widgets/backup_alert_banner.dart';
+import 'package:malist/providers/backup/backup_provider.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -22,6 +24,7 @@ class _HomePageState extends ConsumerState<HomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(todoProvider.notifier).getTodos();
+      ref.read(backupNotifierProvider.notifier).checkAndRunScheduledBackup();
     });
   }
 
@@ -90,6 +93,8 @@ class _HomePageState extends ConsumerState<HomeScreen> {
                   ),
                 ],
               ),
+              const SizedBox(height: 20),
+              const BackupAlertBanner(),
               const SizedBox(height: 20),
               // Menu Options
               GridView.count(

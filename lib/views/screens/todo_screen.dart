@@ -159,13 +159,17 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                   final todo = completedTodos[index];
                   return ListTile(
                     onLongPress: () async {
-                      await ref.read(todoProvider.notifier).deleteTodo(todo.id);
+                      final updatedTodo = todo.copyWith(status: false);
+                      await ref
+                          .read(todoProvider.notifier)
+                          .updateTodo(updatedTodo);
                     },
                     leading: GestureDetector(
                       onLongPress: () async {
+                        final updatedTodo = todo.copyWith(status: false);
                         await ref
                             .read(todoProvider.notifier)
-                            .deleteTodo(todo.id);
+                            .updateTodo(updatedTodo);
                       },
                       child: Checkbox.adaptive(
                         value: todo.status,

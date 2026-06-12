@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:crypto/crypto.dart';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -99,6 +101,8 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
       final destPath =
           '${destDir.path}/${DateTime.now().millisecondsSinceEpoch}_${picked.name}';
       await File(picked.path!).copy(destPath);
+      final fileBytes = await File(destPath).readAsBytes();
+      final checksum = sha256.convert(fileBytes).toString();
 
       if (!mounted) return;
       _showUploadDialog(
@@ -108,6 +112,7 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
         mimeType: mime,
         fileSize: picked.size,
         source: FileSource.device,
+        checksum: checksum,
       );
     } catch (e) {
       if (!mounted) return;
@@ -134,6 +139,8 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
       final destPath =
           '${destDir.path}/${DateTime.now().millisecondsSinceEpoch}_${photo.name}';
       await file.copy(destPath);
+      final fileBytes = await File(destPath).readAsBytes();
+      final checksum = sha256.convert(fileBytes).toString();
 
       if (!mounted) return;
       _showUploadDialog(
@@ -143,6 +150,7 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
         mimeType: mime,
         fileSize: size,
         source: FileSource.camera,
+        checksum: checksum,
       );
     } catch (e) {
       if (!mounted) return;
@@ -159,6 +167,7 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
     required String mimeType,
     required int fileSize,
     required FileSource source,
+    required String checksum,
   }) {
     showGeneralDialog(
       context: context,
@@ -172,6 +181,7 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
         mimeType: mimeType,
         fileSize: fileSize,
         source: source,
+        checksum: checksum,
       ),
       transitionBuilder: (context, anim1, anim2, child) {
         return Transform.scale(
@@ -422,13 +432,15 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
                     selectedColor: theme.colorScheme.primary.withValues(
                       alpha: 0.2,
                     ),
+                    labelStyle: TextStyle(color: Colors.white),
+                    checkmarkColor: Colors.white,
                     side: BorderSide(
                       color: selected
                           ? theme.colorScheme.primary.withValues(alpha: 0.4)
                           : theme.colorScheme.primary.withValues(alpha: 0.1),
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(1),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   );
                 },

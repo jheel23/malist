@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:malist/config/router/app_router.dart';
 import 'package:malist/providers/core/core_service_provider.dart';
 import 'package:malist/providers/notes/notes_provider.dart';
 import 'package:malist/providers/passwords/passwords_provider.dart';
 import 'package:malist/providers/todo/todo_provider.dart';
+import 'package:malist/providers/files/files_provider.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -72,6 +74,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         await ref
                             .read(passwordsNotifierProvider.notifier)
                             .getPasswords();
+                        await ref
+                            .read(filesNotifierProvider.notifier)
+                            .getFiles();
 
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -107,16 +112,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           child: FadeTransition(opacity: anim1, child: child),
         );
       },
-    );
-  }
-
-  void _showAIslopSnackbar() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          "Working on it, dont want to deliver some AI slop brody !!",
-        ),
-      ),
     );
   }
 
@@ -183,32 +178,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 children: [
                   ListTile(
                     title: const Text(
-                      "Import Data",
+                      "Backup & Restore",
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     subtitle: Text(
-                      "Restore from a previous backup",
+                      "Encrypted backups, import & export",
                       style: TextStyle(
                         color: theme.primaryColor.withValues(alpha: 0.5),
                       ),
                     ),
-                    trailing: const Icon(Iconsax.import),
-                    onTap: _showAIslopSnackbar,
-                  ),
-                  const Divider(height: 1, color: Colors.white10),
-                  ListTile(
-                    title: const Text(
-                      "Export Data",
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    subtitle: Text(
-                      "Download your data as JSON",
-                      style: TextStyle(
-                        color: theme.primaryColor.withValues(alpha: 0.5),
-                      ),
-                    ),
-                    trailing: const Icon(Iconsax.export),
-                    onTap: _showAIslopSnackbar,
+                    trailing: const Icon(Iconsax.cloud_change),
+                    onTap: () => context.push(RoutePathHelper.backup),
                   ),
                 ],
               ),

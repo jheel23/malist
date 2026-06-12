@@ -63,6 +63,7 @@ abstract class UserFile with _$UserFile {
     required DateTime createdAt,
     required FileSource source,
     @Default(false) bool isFavorite,
+    @Default('') String checksum,
   }) = _UserFile;
 
   factory UserFile.fromJson(Map<String, dynamic> json) =>

@@ -14,6 +14,7 @@ class UploadFileDialog extends ConsumerStatefulWidget {
     required this.mimeType,
     required this.fileSize,
     required this.source,
+    required this.checksum,
   });
 
   final String filePath;
@@ -22,6 +23,7 @@ class UploadFileDialog extends ConsumerStatefulWidget {
   final String mimeType;
   final int fileSize;
   final FileSource source;
+  final String checksum;
 
   @override
   ConsumerState<UploadFileDialog> createState() => _UploadFileDialogState();
@@ -76,6 +78,7 @@ class _UploadFileDialogState extends ConsumerState<UploadFileDialog> {
         fileSize: widget.fileSize,
         createdAt: DateTime.now(),
         source: widget.source,
+        checksum: widget.checksum,
       );
       ref.read(filesNotifierProvider.notifier).addFile(newFile);
       context.pop();

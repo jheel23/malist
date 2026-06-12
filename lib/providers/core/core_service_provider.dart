@@ -25,32 +25,6 @@ class CoreServiceNotifier extends Notifier<CoreServiceState> {
       },
     );
   }
-
-  Future<void> importData() async {
-    state = CoreServiceState.loading();
-    final result = await repo.importData();
-    result.fold(
-      (failure) {
-        state = CoreServiceState.error(message: failure.message);
-      },
-      (unit) {
-        state = CoreServiceState.loaded(result: true);
-      },
-    );
-  }
-
-  Future<void> exportData() async {
-    state = CoreServiceState.loading();
-    final result = await repo.exportData();
-    result.fold(
-      (failure) {
-        state = CoreServiceState.error(message: failure.message);
-      },
-      (unit) {
-        state = CoreServiceState.loaded(result: true);
-      },
-    );
-  }
 }
 
 final coreServiceProvider =

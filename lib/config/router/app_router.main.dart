@@ -13,6 +13,7 @@ class RoutePathHelper {
   static String files = "/home/files";
   static String fileView = "/home/files/view";
   static String settings = "/home/settings";
+  static String backup = "/home/settings/backup";
 }
 
 final goRouterProvider = Provider<GoRouter>((ref) {
@@ -68,6 +69,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'settings',
             builder: (context, state) => const SettingsScreen(),
+            routes: [
+              GoRoute(
+                path: 'backup',
+                builder: (context, state) => const BackupSettingsScreen(),
+              ),
+            ],
           ),
         ],
       ),
