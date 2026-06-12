@@ -67,17 +67,6 @@ class _AddPasswordDialogState extends ConsumerState<AddPasswordDialog> {
               ),
               const SizedBox(height: 24),
               TextFormField(
-                controller: _usernameController,
-                decoration: const InputDecoration(
-                  labelText: "Username / Email",
-                  hintText: "Enter username",
-                ),
-                validator: (value) => value == null || value.trim().isEmpty
-                    ? "Username is required"
-                    : null,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
                 controller: _categoryController,
                 decoration: const InputDecoration(
                   labelText: "Title / Category",
@@ -85,6 +74,17 @@ class _AddPasswordDialogState extends ConsumerState<AddPasswordDialog> {
                 ),
                 validator: (value) => value == null || value.trim().isEmpty
                     ? "Title is required"
+                    : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _usernameController,
+                decoration: const InputDecoration(
+                  labelText: "Username / Email",
+                  hintText: "Enter username",
+                ),
+                validator: (value) => value == null || value.trim().isEmpty
+                    ? "Username is required"
                     : null,
               ),
               const SizedBox(height: 16),

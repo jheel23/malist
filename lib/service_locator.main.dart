@@ -40,6 +40,10 @@ Future<void> initServiceLocator() async {
   sl.registerSingleton<TodoRepo>(
     TodoRepoImpl(databaseService: sl<DatabaseService>()),
   );
+
+  sl.registerSingleton<FilesRepo>(
+    FilesRepoImpl(databaseService: sl<DatabaseService>()),
+  );
   sl.registerSingleton<CoreServiceRepo>(
     CoreServiceRepoImpl(source: sl<CoreServiceSource>()),
   );
@@ -52,5 +56,6 @@ Future<void> initServiceLocator() async {
   sl.registerFactory(() => NotesNotifier(repository: sl<NotesRepo>()));
   sl.registerFactory(() => PasswordsNotifier(repository: sl<PasswordsRepo>()));
   sl.registerFactory(() => TodoNotifier(repository: sl<TodoRepo>()));
+  sl.registerFactory(() => FilesNotifier(repository: sl<FilesRepo>()));
   sl.registerFactory(() => CoreServiceNotifier(repo: sl<CoreServiceRepo>()));
 }

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:malist/data/models/password/password_model.dart';
 import 'package:malist/providers/passwords/passwords_provider.dart';
 import 'package:malist/providers/passwords/state/passwords_state.dart';
 import 'package:malist/views/widgets/dialogs/add_password_dialog.dart';
@@ -18,6 +19,8 @@ class PasswordsScreen extends ConsumerStatefulWidget {
 }
 
 class _PasswordsScreenState extends ConsumerState<PasswordsScreen> {
+  bool _isCompact = false;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -61,7 +64,7 @@ class _PasswordsScreenState extends ConsumerState<PasswordsScreen> {
               title: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: Row(
-                  crossAxisAlignment: .center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
                       onPressed: () => context.pop(),
@@ -69,8 +72,8 @@ class _PasswordsScreenState extends ConsumerState<PasswordsScreen> {
                     ),
                     const SizedBox(width: 20),
                     Column(
-                      mainAxisSize: .min,
-                      crossAxisAlignment: .start,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Vault', style: theme.textTheme.displayMedium),
                         Text(
@@ -79,6 +82,21 @@ class _PasswordsScreenState extends ConsumerState<PasswordsScreen> {
                         ),
                       ],
                     ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _isCompact = !_isCompact;
+                        });
+                      },
+                      icon: Icon(
+                        _isCompact
+                            ? Icons.view_agenda_outlined
+                            : Icons.grid_view_outlined,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
                   ],
                 ),
               ),
@@ -86,7 +104,6 @@ class _PasswordsScreenState extends ConsumerState<PasswordsScreen> {
             ),
           ),
           SliverToBoxAdapter(child: SizedBox(height: 40)),
-
           Consumer(
             builder: (context, ref, child) {
               final passState = ref.watch(passwordsNotifierProvider);
@@ -115,187 +132,11 @@ class _PasswordsScreenState extends ConsumerState<PasswordsScreen> {
                     itemCount: passwords.length,
                     itemBuilder: (context, index) {
                       final password = passwords[index];
-                      return Dismissible(
-                        key: Key(password.id),
-                        direction: DismissDirection.endToStart,
-                        // onUpdate: (details) async {
-                        //   if (details.progress > 0.5) {
-                        //     final dismissResult = await _showDeleteDialog(
-                        //       context,
-                        //       password.id,
-                        //     );
-                        //     if (dismissResult == false) {
-                        //       ref
-                        //           .read(passwordsNotifierProvider.notifier)
-                        //           .getPasswords();
-                        //     }
-                        //   }
-                        // },
-                        confirmDismiss: (direction) async {
-                          final dismissResult = await _showDeleteDialog(
-                            context,
-                            password.id,
-                          );
-                          return dismissResult;
-                        },
-                        background: Container(
-                          padding: EdgeInsets.all(20),
-                          margin: EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 20,
-                          ),
-                          decoration: BoxDecoration(
-                            color: theme.primaryColor.withValues(alpha: 0.3),
-                            borderRadius: BorderRadius.circular(1),
-                          ),
-                          alignment: .center,
-                          child: Row(
-                            mainAxisAlignment: .end,
-                            children: [
-                              Icon(
-                                Iconsax.trash,
-                                color: theme.primaryColor.withValues(
-                                  alpha: 0.5,
-                                ),
-                                size: 40,
-                              ),
-                              SizedBox(width: 20),
-                              Text(
-                                'Swipe to\nDelete',
-                                style: theme.textTheme.bodyLarge!.copyWith(
-                                  color: theme.primaryColor.withValues(
-                                    alpha: 0.5,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        child: Container(
-                          padding: EdgeInsets.all(20),
-                          margin: EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 20,
-                          ),
-                          decoration: BoxDecoration(
-                            color: theme.primaryColor.withValues(alpha: 0.08),
-                            borderRadius: BorderRadius.circular(1),
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.key,
-                                    color: theme.colorScheme.primary.withValues(
-                                      alpha: 0.5,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    'ENCRYPTED',
-                                    style: theme.textTheme.bodyMedium!.copyWith(
-                                      letterSpacing: 2,
-                                      color: theme.colorScheme.primary
-                                          .withValues(alpha: 0.7),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Clipboard.setData(
-                                        ClipboardData(
-                                          text:
-                                              "${passwords[index].username}\n${passwords[index].password}",
-                                        ),
-                                      );
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                            'Username and Password copied to clipboard',
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: Column(
-                                      mainAxisSize: .min,
-                                      children: [
-                                        Text('COPY'),
-                                        SizedBox(height: 10),
-                                        Container(
-                                          height: 1,
-                                          width: 40,
-                                          color: Colors.white38,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 40),
-                              Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: .start,
-                                    mainAxisSize: .min,
-                                    children: [
-                                      Text(passwords[index].category),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        passwords[index].username.replaceRange(
-                                          (passwords[index].username.length > 4)
-                                              ? passwords[index]
-                                                        .username
-                                                        .length -
-                                                    (passwords[index]
-                                                                .username
-                                                                .length /
-                                                            2)
-                                                        .ceil()
-                                              : 0,
-                                          null,
-                                          List.filled(
-                                            passwords[index].username.length -
-                                                (passwords[index]
-                                                            .username
-                                                            .length /
-                                                        2)
-                                                    .ceil(),
-                                            '*',
-                                          ).join(),
-                                        ),
-                                        style: theme.textTheme.titleLarge,
-                                        maxLines: 1,
-                                        overflow: .ellipsis,
-                                      ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        List.filled(
-                                          passwords[index].password.length,
-                                          '*',
-                                        ).join(),
-                                        style: theme.textTheme.bodyLarge!
-                                            .copyWith(
-                                              letterSpacing: 2,
-                                              color: theme.colorScheme.primary
-                                                  .withValues(alpha: 0.7),
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  Icon(
-                                    Icons.lock,
-                                    color: Colors.white12,
-                                    size: 100,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+                      return _PasswordCard(
+                        password: password,
+                        isCompact: _isCompact,
+                        confirmDismiss: () =>
+                            _showDeleteDialog(context, password.id),
                       );
                     },
                   );
@@ -342,5 +183,267 @@ class _PasswordsScreenState extends ConsumerState<PasswordsScreen> {
       ),
     );
     return result ?? false;
+  }
+}
+
+class _PasswordCard extends StatefulWidget {
+  final PasswordModel password;
+  final bool isCompact;
+  final Future<bool> Function() confirmDismiss;
+
+  const _PasswordCard({
+    required this.password,
+    required this.isCompact,
+    required this.confirmDismiss,
+  });
+
+  @override
+  State<_PasswordCard> createState() => _PasswordCardState();
+}
+
+class _PasswordCardState extends State<_PasswordCard> {
+  bool _isVisible = false;
+
+  void _copyToClipboard() {
+    Clipboard.setData(
+      ClipboardData(
+        text: "${widget.password.username}\n${widget.password.password}",
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Username and Password copied to clipboard'),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    final maskedUsername = widget.password.username.replaceRange(
+      (widget.password.username.length > 4)
+          ? widget.password.username.length -
+                (widget.password.username.length / 2).ceil()
+          : 0,
+      null,
+      List.filled(
+        widget.password.username.length -
+            (widget.password.username.length / 2).ceil(),
+        '*',
+      ).join(),
+    );
+
+    final displayUsername = _isVisible
+        ? widget.password.username
+        : maskedUsername;
+    final displayPassword = _isVisible
+        ? widget.password.password
+        : List.filled(widget.password.password.length, '*').join();
+
+    final cardContent = widget.isCompact
+        ? _buildCompactCard(theme, displayUsername, displayPassword)
+        : _buildDetailedCard(theme, displayUsername, displayPassword);
+
+    return Dismissible(
+      key: Key(widget.password.id),
+      direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) => widget.confirmDismiss(),
+      background: Container(
+        padding: EdgeInsets.all(20),
+        margin: EdgeInsets.symmetric(
+          vertical: widget.isCompact ? 5 : 10,
+          horizontal: 20,
+        ),
+        decoration: BoxDecoration(
+          color: theme.primaryColor.withValues(alpha: 0.3),
+          borderRadius: BorderRadius.circular(1),
+        ),
+        alignment: Alignment.centerRight,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              'Swipe to\nDelete',
+              textAlign: TextAlign.right,
+              style: theme.textTheme.bodyLarge!.copyWith(
+                color: theme.primaryColor.withValues(alpha: 0.5),
+              ),
+            ),
+            SizedBox(width: 20),
+            Icon(
+              Iconsax.trash,
+              color: theme.primaryColor.withValues(alpha: 0.5),
+              size: 40,
+            ),
+          ],
+        ),
+      ),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: cardContent,
+      ),
+    );
+  }
+
+  Widget _buildDetailedCard(
+    ThemeData theme,
+    String displayUsername,
+    String displayPassword,
+  ) {
+    return Container(
+      key: const ValueKey('detailed'),
+      padding: EdgeInsets.all(20),
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      decoration: BoxDecoration(
+        color: theme.primaryColor.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(1),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.key,
+                color: theme.colorScheme.primary.withValues(alpha: 0.5),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'ENCRYPTED',
+                style: theme.textTheme.bodyMedium!.copyWith(
+                  letterSpacing: 2,
+                  color: theme.colorScheme.primary.withValues(alpha: 0.7),
+                ),
+              ),
+              Spacer(),
+              IconButton(
+                icon: Icon(
+                  _isVisible ? Icons.visibility_off : Icons.visibility,
+                ),
+                color: theme.colorScheme.primary.withValues(alpha: 0.7),
+                onPressed: () {
+                  setState(() {
+                    _isVisible = !_isVisible;
+                  });
+                },
+              ),
+              GestureDetector(
+                onTap: _copyToClipboard,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('COPY'),
+                    SizedBox(height: 10),
+                    Container(height: 1, width: 40, color: Colors.white38),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 40),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(widget.password.category),
+                    SizedBox(height: 5),
+                    Text(
+                      displayUsername,
+                      style: theme.textTheme.titleLarge,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      displayPassword,
+                      style: theme.textTheme.bodyLarge!.copyWith(
+                        letterSpacing: _isVisible ? 0 : 2,
+                        color: theme.colorScheme.primary.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.lock, color: Colors.white12, size: 100),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCompactCard(
+    ThemeData theme,
+    String displayUsername,
+    String displayPassword,
+  ) {
+    return Container(
+      key: const ValueKey('compact'),
+      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      decoration: BoxDecoration(
+        color: theme.primaryColor.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(1),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.lock_outline,
+            color: theme.colorScheme.primary.withValues(alpha: 0.5),
+            size: 30,
+          ),
+          const SizedBox(width: 15),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  widget.password.category,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.7),
+                  ),
+                ),
+                SizedBox(height: 2),
+                Text(
+                  displayUsername,
+                  style: theme.textTheme.titleMedium,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 2),
+                Text(
+                  displayPassword,
+                  style: theme.textTheme.bodyMedium!.copyWith(
+                    letterSpacing: _isVisible ? 0 : 2,
+                    color: theme.colorScheme.primary.withValues(alpha: 0.6),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: Icon(_isVisible ? Icons.visibility_off : Icons.visibility),
+            color: theme.colorScheme.primary.withValues(alpha: 0.7),
+            onPressed: () {
+              setState(() {
+                _isVisible = !_isVisible;
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.copy, size: 20),
+            color: theme.colorScheme.primary.withValues(alpha: 0.7),
+            onPressed: _copyToClipboard,
+          ),
+        ],
+      ),
+    );
   }
 }

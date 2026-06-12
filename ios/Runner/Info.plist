@@ -18,6 +18,13 @@
 	<string>malist</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Malist needs camera access to capture photos.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Malist needs photo library access to pick files.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Malist needs microphone access for video recording.</string>
+
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>

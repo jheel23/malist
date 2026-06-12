@@ -47,5 +47,25 @@ class DbSchemas {
         FieldSchema(name: 'dateTime', type: DataType.text),
       ],
     ),
+
+    // FILES SCHEMA
+    TableSchema(
+      name: 'files',
+      primaryKeyConfig: PrimaryKeyConfig(
+        name: 'id',
+        type: PrimaryKeyType.shortCode,
+      ),
+      fields: [
+        FieldSchema(name: 'title', type: DataType.text),
+        FieldSchema(name: 'originalFileName', type: DataType.text),
+        FieldSchema(name: 'filePath', type: DataType.text),
+        FieldSchema(name: 'fileExtension', type: DataType.text),
+        FieldSchema(name: 'mimeType', type: DataType.text),
+        FieldSchema(name: 'fileSize', type: DataType.integer),
+        FieldSchema(name: 'createdAt', type: DataType.text),
+        FieldSchema(name: 'source', type: DataType.text),
+        FieldSchema(name: 'isFavorite', type: DataType.boolean),
+      ],
+    ),
   ];
 }

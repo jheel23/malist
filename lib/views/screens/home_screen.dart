@@ -184,27 +184,30 @@ class _HomePageState extends ConsumerState<HomeScreen> {
                       ),
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: theme.primaryColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(1),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: .start,
-                      children: [
-                        const Icon(Icons.archive_outlined),
-                        const Spacer(),
-                        Text("Archive", style: theme.textTheme.titleMedium),
-                        const SizedBox(height: 5),
-                        Text(
-                          "Coming Soon...",
-                          style: theme.textTheme.titleSmall!.copyWith(
-                            color: theme.primaryColor.withValues(alpha: 0.5),
+                  GestureDetector(
+                    onTap: () => context.push(RoutePathHelper.files),
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: theme.primaryColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(1),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.archive_outlined),
+                          const Spacer(),
+                          Text("Files", style: theme.textTheme.titleMedium),
+                          const SizedBox(height: 5),
+                          Text(
+                            "Secure Storage",
+                            style: theme.textTheme.titleSmall!.copyWith(
+                              color: theme.primaryColor.withValues(alpha: 0.5),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],

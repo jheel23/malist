@@ -10,6 +10,8 @@ class RoutePathHelper {
   static String noteDetail = "/home/notes/noteDetail";
   static String todo = "/home/todo";
   static String passwords = "/home/passwords";
+  static String files = "/home/files";
+  static String fileView = "/home/files/view";
   static String settings = "/home/settings";
 }
 
@@ -49,6 +51,19 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'passwords',
             builder: (context, state) => const PasswordsScreen(),
+          ),
+          GoRoute(
+            path: 'files',
+            builder: (context, state) => const FilesScreen(),
+            routes: [
+              GoRoute(
+                path: 'view',
+                builder: (context, state) {
+                  final file = state.extra as UserFile;
+                  return FileViewScreen(file: file);
+                },
+              ),
+            ],
           ),
           GoRoute(
             path: 'settings',

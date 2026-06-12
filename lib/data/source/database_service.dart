@@ -163,7 +163,7 @@ class DatabaseServiceImpl implements DatabaseService {
   @override
   Future<Either<Failure, Unit>> deleteAll() async {
     try {
-      final tables = ['notes', 'todos', 'passwords'];
+      final tables = ['notes', 'todos', 'passwords', 'files'];
       for (final table in tables) {
         final records = await db.query(table);
         if (records.isSuccess) {
